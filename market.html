@@ -1,0 +1,1550 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TerraSphere — Маркетплейс устойчивых товаров</title>
+<style>
+/* ═══════════════════════════════════════
+   ПЕРЕМЕННЫЕ И БАЗОВЫЕ СТИЛИ
+═══════════════════════════════════════ */
+:root {
+  --green-dark:    #1a4731;
+  --green-main:    #2d6a4f;
+  --green-light:   #52b788;
+  --green-pale:    #d8f3dc;
+  --green-ultra:   #f0faf3;
+  --white:         #ffffff;
+  --gray-50:       #f8fafb;
+  --gray-100:      #f1f4f2;
+  --gray-200:      #e2e8e4;
+  --gray-400:      #9db4a3;
+  --gray-600:      #5c7a65;
+  --gray-800:      #2c3e30;
+  --text-primary:  #1a2e1e;
+  --text-secondary:#4a6350;
+  --text-muted:    #8aaa93;
+  --shadow-sm:     0 1px 4px rgba(45,106,79,.08);
+  --shadow-md:     0 4px 16px rgba(45,106,79,.12);
+  --shadow-lg:     0 8px 32px rgba(45,106,79,.18);
+  --radius-sm:     8px;
+  --radius-md:     14px;
+  --radius-lg:     20px;
+  --radius-xl:     28px;
+  --transition:    .22s cubic-bezier(.4,0,.2,1);
+  --font-display:  'Georgia', 'Times New Roman', serif;
+  --font-body:     'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  color: var(--text-primary);
+  background: var(--white);
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* ═══════════════════════════════════════
+   HEADER
+═══════════════════════════════════════ */
+.header {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(255,255,255,.95);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--gray-200);
+  box-shadow: var(--shadow-sm);
+}
+
+.header-inner {
+  max-width: 1340px; margin: 0 auto;
+  display: flex; align-items: center; gap: 24px;
+  padding: 14px 24px;
+}
+
+/* Логотип */
+.logo {
+  display: flex; align-items: center; gap: 10px;
+  text-decoration: none; flex-shrink: 0;
+}
+.logo-icon {
+  width: 38px; height: 38px;
+  background: linear-gradient(135deg, var(--green-main), var(--green-light));
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+  box-shadow: 0 2px 8px rgba(45,106,79,.3);
+}
+.logo-text {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--green-dark);
+  letter-spacing: -.5px;
+}
+.logo-dot { color: var(--green-light); }
+
+/* Поиск */
+.search-wrap {
+  flex: 1; max-width: 480px; position: relative;
+}
+.search-input {
+  width: 100%;
+  padding: 10px 44px 10px 16px;
+  border: 1.5px solid var(--gray-200);
+  border-radius: var(--radius-xl);
+  font-size: .93rem;
+  color: var(--text-primary);
+  background: var(--gray-50);
+  transition: var(--transition);
+  outline: none;
+}
+.search-input:focus {
+  border-color: var(--green-light);
+  background: var(--white);
+  box-shadow: 0 0 0 3px rgba(82,183,136,.15);
+}
+.search-icon {
+  position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
+  color: var(--gray-400); pointer-events: none; font-size: 16px;
+}
+
+/* Иконки справа */
+.header-actions { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+.icon-btn {
+  position: relative;
+  display: flex; align-items: center; justify-content: center;
+  width: 44px; height: 44px;
+  border: 1.5px solid var(--gray-200);
+  border-radius: 50%;
+  background: var(--white);
+  cursor: pointer;
+  font-size: 18px;
+  transition: var(--transition);
+  color: var(--text-secondary);
+}
+.icon-btn:hover {
+  background: var(--green-pale);
+  border-color: var(--green-light);
+  color: var(--green-dark);
+  transform: translateY(-1px);
+}
+.badge {
+  position: absolute; top: -4px; right: -4px;
+  background: var(--green-main);
+  color: #fff;
+  font-size: .65rem; font-weight: 700;
+  min-width: 18px; height: 18px;
+  border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  border: 2px solid var(--white);
+  padding: 0 3px;
+  transition: var(--transition);
+}
+.badge.hidden { display: none; }
+
+/* ═══════════════════════════════════════
+   HERO BANNER
+═══════════════════════════════════════ */
+.hero {
+  position: relative;
+  min-height: 480px;
+  display: flex; align-items: center;
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--green-dark) 0%, var(--green-main) 50%, #3a8f62 100%);
+}
+.hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Ccircle cx='40' cy='40' r='40'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E") repeat;
+}
+.hero-decor {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255,255,255,.05);
+}
+.hero-decor-1 { width: 400px; height: 400px; right: -100px; top: -100px; }
+.hero-decor-2 { width: 250px; height: 250px; right: 200px; bottom: -80px; }
+.hero-decor-3 { width: 150px; height: 150px; left: -40px; bottom: -40px; }
+
+.hero-content {
+  position: relative; z-index: 1;
+  max-width: 1340px; margin: 0 auto;
+  padding: 80px 24px;
+}
+.hero-tag {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(255,255,255,.15);
+  color: rgba(255,255,255,.9);
+  font-size: .8rem; font-weight: 600;
+  padding: 5px 14px;
+  border-radius: 20px;
+  letter-spacing: .5px;
+  margin-bottom: 20px;
+  backdrop-filter: blur(4px);
+}
+.hero h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.18;
+  max-width: 580px;
+  margin-bottom: 18px;
+  letter-spacing: -.5px;
+}
+.hero p {
+  color: rgba(255,255,255,.8);
+  font-size: 1.05rem;
+  max-width: 440px;
+  margin-bottom: 36px;
+}
+.btn-hero {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: #fff;
+  color: var(--green-dark);
+  font-size: .95rem; font-weight: 700;
+  padding: 14px 30px;
+  border-radius: var(--radius-xl);
+  border: none; cursor: pointer;
+  text-decoration: none;
+  transition: var(--transition);
+  box-shadow: 0 4px 20px rgba(0,0,0,.2);
+}
+.btn-hero:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(0,0,0,.25);
+}
+
+.hero-stats {
+  display: flex; gap: 32px; margin-top: 48px;
+  flex-wrap: wrap;
+}
+.hero-stat { color: rgba(255,255,255,.85); }
+.hero-stat strong {
+  display: block;
+  font-size: 1.6rem; font-weight: 700;
+  color: #fff;
+  font-family: var(--font-display);
+}
+.hero-stat span { font-size: .8rem; opacity: .7; }
+
+/* ═══════════════════════════════════════
+   ОСНОВНОЙ МАКЕТ
+═══════════════════════════════════════ */
+.shop-layout {
+  max-width: 1340px; margin: 0 auto;
+  padding: 40px 24px;
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 32px;
+  align-items: start;
+}
+
+/* ═══════════════════════════════════════
+   САЙДБАР (КАТЕГОРИИ)
+═══════════════════════════════════════ */
+.sidebar {
+  position: sticky; top: 80px;
+  background: var(--white);
+  border: 1.5px solid var(--gray-200);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+}
+
+.sidebar-title {
+  font-size: .7rem; font-weight: 700;
+  letter-spacing: 1.5px; text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+}
+
+.category-list { list-style: none; display: flex; flex-direction: column; gap: 4px; }
+
+.category-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: var(--transition);
+  font-size: .92rem;
+  color: var(--text-secondary);
+  border: 1.5px solid transparent;
+}
+.category-item:hover {
+  background: var(--green-ultra);
+  color: var(--green-dark);
+}
+.category-item.active {
+  background: var(--green-pale);
+  color: var(--green-dark);
+  font-weight: 600;
+  border-color: rgba(82,183,136,.3);
+}
+.cat-icon { font-size: 18px; flex-shrink: 0; }
+.cat-count {
+  margin-left: auto;
+  font-size: .75rem;
+  background: var(--gray-100);
+  color: var(--text-muted);
+  padding: 2px 7px;
+  border-radius: 10px;
+}
+.category-item.active .cat-count {
+  background: var(--green-main);
+  color: #fff;
+}
+
+/* Разделитель */
+.sidebar-divider {
+  border: none;
+  border-top: 1px solid var(--gray-200);
+  margin: 20px 0;
+}
+
+/* Сортировка */
+.sort-label {
+  font-size: .7rem; font-weight: 700;
+  letter-spacing: 1.5px; text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+  display: block;
+}
+.sort-select {
+  width: 100%;
+  padding: 9px 12px;
+  border: 1.5px solid var(--gray-200);
+  border-radius: var(--radius-sm);
+  font-size: .88rem;
+  color: var(--text-primary);
+  background: var(--gray-50);
+  cursor: pointer;
+  outline: none;
+  transition: var(--transition);
+}
+.sort-select:focus {
+  border-color: var(--green-light);
+  box-shadow: 0 0 0 3px rgba(82,183,136,.15);
+}
+
+/* ═══════════════════════════════════════
+   ОСНОВНАЯ ОБЛАСТЬ ТОВАРОВ
+═══════════════════════════════════════ */
+.catalog-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 24px; flex-wrap: wrap; gap: 12px;
+}
+.catalog-title {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  color: var(--text-primary);
+}
+.catalog-count {
+  font-size: .85rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+/* Сетка товаров */
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+/* Карточка товара */
+.product-card {
+  background: var(--white);
+  border: 1.5px solid var(--gray-200);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  transition: var(--transition);
+  display: flex; flex-direction: column;
+  position: relative;
+}
+.product-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--gray-200);
+}
+
+.product-image-wrap {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  background: var(--green-ultra);
+  overflow: hidden;
+}
+.product-img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 3.5rem;
+  transition: transform .4s ease;
+}
+.product-card:hover .product-img { transform: scale(1.05); }
+
+.product-fav {
+  position: absolute; top: 10px; right: 10px;
+  width: 32px; height: 32px;
+  background: rgba(255,255,255,.9);
+  border-radius: 50%;
+  border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px;
+  transition: var(--transition);
+  backdrop-filter: blur(4px);
+  box-shadow: var(--shadow-sm);
+}
+.product-fav:hover { background: #fff; transform: scale(1.1); }
+.product-fav.active { color: #e74c3c; }
+
+.product-badge {
+  position: absolute; top: 10px; left: 10px;
+  background: var(--green-main);
+  color: #fff;
+  font-size: .65rem; font-weight: 700;
+  padding: 3px 9px;
+  border-radius: 10px;
+  letter-spacing: .3px;
+}
+
+.product-body {
+  padding: 14px 16px;
+  flex: 1; display: flex; flex-direction: column;
+}
+.product-cat {
+  font-size: .7rem; font-weight: 600;
+  text-transform: uppercase; letter-spacing: .8px;
+  color: var(--green-light);
+  margin-bottom: 5px;
+}
+.product-name {
+  font-size: .95rem; font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+  line-height: 1.35;
+  flex: 1;
+}
+.product-rating {
+  display: flex; align-items: center; gap: 5px;
+  margin-bottom: 12px;
+}
+.stars { color: #f4b942; font-size: .85rem; letter-spacing: 1px; }
+.rating-val { font-size: .78rem; color: var(--text-muted); }
+
+.product-footer {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 8px;
+}
+.product-price {
+  font-size: 1.1rem; font-weight: 700;
+  color: var(--green-dark);
+  font-family: var(--font-display);
+}
+.product-price span { font-size: .75rem; font-weight: 400; color: var(--text-muted); }
+
+.btn-add {
+  display: flex; align-items: center; gap: 5px;
+  background: var(--green-main);
+  color: #fff;
+  border: none; cursor: pointer;
+  padding: 8px 14px;
+  border-radius: var(--radius-sm);
+  font-size: .82rem; font-weight: 600;
+  transition: var(--transition);
+  white-space: nowrap;
+}
+.btn-add:hover {
+  background: var(--green-dark);
+  transform: translateY(-1px);
+}
+.btn-add.added {
+  background: var(--green-pale);
+  color: var(--green-dark);
+}
+
+/* Пустое состояние */
+.empty-state {
+  grid-column: 1 / -1;
+  text-align: center; padding: 80px 20px;
+  color: var(--text-muted);
+}
+.empty-state .empty-icon { font-size: 3.5rem; margin-bottom: 16px; }
+.empty-state h3 { font-size: 1.2rem; color: var(--text-secondary); margin-bottom: 8px; }
+
+/* ═══════════════════════════════════════
+   БОКОВАЯ КОРЗИНА (DRAWER)
+═══════════════════════════════════════ */
+.cart-overlay {
+  position: fixed; inset: 0; z-index: 200;
+  background: rgba(26,47,30,.4);
+  backdrop-filter: blur(4px);
+  opacity: 0; pointer-events: none;
+  transition: opacity .3s ease;
+}
+.cart-overlay.open { opacity: 1; pointer-events: all; }
+
+.cart-drawer {
+  position: fixed; right: 0; top: 0; bottom: 0; z-index: 201;
+  width: 400px; max-width: 100vw;
+  background: var(--white);
+  box-shadow: -8px 0 40px rgba(26,47,30,.15);
+  display: flex; flex-direction: column;
+  transform: translateX(100%);
+  transition: transform .35s cubic-bezier(.4,0,.2,1);
+}
+.cart-drawer.open { transform: translateX(0); }
+
+.cart-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--gray-200);
+}
+.cart-head h2 {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  color: var(--text-primary);
+}
+.cart-close {
+  width: 36px; height: 36px;
+  border: 1.5px solid var(--gray-200);
+  border-radius: 50%;
+  background: none; cursor: pointer;
+  font-size: 16px; color: var(--text-secondary);
+  display: flex; align-items: center; justify-content: center;
+  transition: var(--transition);
+}
+.cart-close:hover { background: var(--gray-100); }
+
+.cart-items { flex: 1; overflow-y: auto; padding: 16px 24px; }
+.cart-items::-webkit-scrollbar { width: 4px; }
+.cart-items::-webkit-scrollbar-thumb { background: var(--gray-200); border-radius: 2px; }
+
+.cart-item {
+  display: flex; align-items: center; gap: 14px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--gray-100);
+  animation: slideIn .25s ease;
+}
+@keyframes slideIn { from { opacity:0; transform:translateY(-8px); } to { opacity:1; transform:translateY(0); } }
+
+.cart-item-img {
+  width: 52px; height: 52px;
+  background: var(--green-ultra);
+  border-radius: var(--radius-sm);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; flex-shrink: 0;
+}
+.cart-item-info { flex: 1; }
+.cart-item-name { font-size: .88rem; font-weight: 600; margin-bottom: 3px; }
+.cart-item-price { font-size: .82rem; color: var(--text-muted); }
+
+.cart-qty {
+  display: flex; align-items: center; gap: 8px;
+}
+.qty-btn {
+  width: 26px; height: 26px;
+  border: 1.5px solid var(--gray-200);
+  border-radius: 6px;
+  background: var(--white); cursor: pointer;
+  font-size: 14px; font-weight: 600;
+  display: flex; align-items: center; justify-content: center;
+  transition: var(--transition); color: var(--text-secondary);
+}
+.qty-btn:hover { background: var(--green-pale); border-color: var(--green-light); color: var(--green-dark); }
+.qty-val { font-size: .9rem; font-weight: 700; min-width: 20px; text-align: center; }
+
+.cart-item-del {
+  background: none; border: none; cursor: pointer;
+  color: var(--gray-400); font-size: 16px;
+  padding: 4px; transition: var(--transition);
+}
+.cart-item-del:hover { color: #e74c3c; }
+
+.cart-empty {
+  text-align: center; padding: 60px 20px;
+  color: var(--text-muted);
+}
+.cart-empty .ce-icon { font-size: 3rem; margin-bottom: 12px; }
+.cart-empty p { font-size: .9rem; }
+
+.cart-foot {
+  padding: 20px 24px;
+  border-top: 1px solid var(--gray-200);
+  background: var(--gray-50);
+}
+.cart-summary {
+  display: flex; justify-content: space-between;
+  margin-bottom: 6px; font-size: .88rem;
+  color: var(--text-secondary);
+}
+.cart-total {
+  display: flex; justify-content: space-between;
+  font-size: 1.1rem; font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 18px;
+  padding-top: 12px;
+  border-top: 1px solid var(--gray-200);
+}
+.btn-checkout {
+  width: 100%;
+  background: var(--green-main);
+  color: #fff;
+  border: none; cursor: pointer;
+  padding: 14px;
+  border-radius: var(--radius-md);
+  font-size: .95rem; font-weight: 700;
+  transition: var(--transition);
+  letter-spacing: .3px;
+}
+.btn-checkout:hover { background: var(--green-dark); transform: translateY(-1px); }
+
+/* ═══════════════════════════════════════
+   ПАНЕЛЬ ИЗБРАННОГО
+═══════════════════════════════════════ */
+.fav-overlay {
+  position: fixed; inset: 0; z-index: 200;
+  background: rgba(26,47,30,.4);
+  backdrop-filter: blur(4px);
+  opacity: 0; pointer-events: none;
+  transition: opacity .3s ease;
+}
+.fav-overlay.open { opacity: 1; pointer-events: all; }
+
+.fav-drawer {
+  position: fixed; right: 0; top: 0; bottom: 0; z-index: 201;
+  width: 400px; max-width: 100vw;
+  background: var(--white);
+  box-shadow: -8px 0 40px rgba(26,47,30,.15);
+  display: flex; flex-direction: column;
+  transform: translateX(100%);
+  transition: transform .35s cubic-bezier(.4,0,.2,1);
+}
+.fav-drawer.open { transform: translateX(0); }
+
+.fav-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--gray-200);
+}
+.fav-head h2 { font-family: var(--font-display); font-size: 1.2rem; }
+.fav-items { flex: 1; overflow-y: auto; padding: 16px 24px; }
+
+.fav-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--gray-100);
+}
+.fav-item-img {
+  width: 48px; height: 48px;
+  background: var(--green-ultra);
+  border-radius: var(--radius-sm);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; flex-shrink: 0;
+}
+.fav-item-info { flex: 1; }
+.fav-item-name { font-size: .88rem; font-weight: 600; margin-bottom: 2px; }
+.fav-item-price { font-size: .82rem; color: var(--text-muted); }
+.fav-item-add {
+  background: var(--green-main); color: #fff;
+  border: none; cursor: pointer;
+  padding: 7px 12px; border-radius: var(--radius-sm);
+  font-size: .78rem; font-weight: 600;
+  transition: var(--transition);
+}
+.fav-item-add:hover { background: var(--green-dark); }
+.fav-item-del {
+  background: none; border: none; cursor: pointer;
+  color: var(--gray-400); font-size: 16px;
+  padding: 4px; transition: var(--transition);
+}
+.fav-item-del:hover { color: #e74c3c; }
+
+/* ═══════════════════════════════════════
+   МОДАЛЬНОЕ ОКНО ОФОРМЛЕНИЯ
+═══════════════════════════════════════ */
+.modal-overlay {
+  position: fixed; inset: 0; z-index: 300;
+  background: rgba(26,47,30,.5);
+  backdrop-filter: blur(6px);
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px;
+  opacity: 0; pointer-events: none;
+  transition: opacity .3s ease;
+}
+.modal-overlay.open { opacity: 1; pointer-events: all; }
+
+.modal {
+  background: var(--white);
+  border-radius: var(--radius-xl);
+  width: 100%; max-width: 500px;
+  padding: 40px;
+  box-shadow: var(--shadow-lg);
+  transform: scale(.95) translateY(20px);
+  transition: transform .3s cubic-bezier(.4,0,.2,1);
+}
+.modal-overlay.open .modal { transform: scale(1) translateY(0); }
+
+.modal-head {
+  text-align: center; margin-bottom: 30px;
+}
+.modal-icon { font-size: 2.5rem; margin-bottom: 12px; }
+.modal-head h2 {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+}
+.modal-head p { font-size: .88rem; color: var(--text-muted); }
+
+.form-group { margin-bottom: 18px; }
+.form-label {
+  display: block;
+  font-size: .8rem; font-weight: 600;
+  text-transform: uppercase; letter-spacing: .5px;
+  color: var(--text-secondary);
+  margin-bottom: 7px;
+}
+.form-input, .form-textarea {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1.5px solid var(--gray-200);
+  border-radius: var(--radius-sm);
+  font-size: .92rem;
+  color: var(--text-primary);
+  background: var(--gray-50);
+  outline: none;
+  transition: var(--transition);
+  font-family: var(--font-body);
+}
+.form-textarea { resize: vertical; min-height: 80px; }
+.form-input:focus, .form-textarea:focus {
+  border-color: var(--green-light);
+  background: var(--white);
+  box-shadow: 0 0 0 3px rgba(82,183,136,.15);
+}
+.form-input.error { border-color: #e74c3c; }
+
+.modal-actions { display: flex; gap: 12px; margin-top: 24px; }
+.btn-confirm {
+  flex: 1;
+  background: var(--green-main); color: #fff;
+  border: none; cursor: pointer;
+  padding: 14px;
+  border-radius: var(--radius-md);
+  font-size: .95rem; font-weight: 700;
+  transition: var(--transition);
+}
+.btn-confirm:hover { background: var(--green-dark); }
+.btn-cancel {
+  flex: 0 0 auto;
+  background: none; color: var(--text-secondary);
+  border: 1.5px solid var(--gray-200); cursor: pointer;
+  padding: 14px 20px;
+  border-radius: var(--radius-md);
+  font-size: .92rem; font-weight: 600;
+  transition: var(--transition);
+}
+.btn-cancel:hover { background: var(--gray-100); }
+
+/* Успех */
+.success-modal { text-align: center; }
+.success-modal .success-icon { font-size: 4rem; margin-bottom: 16px; }
+.success-modal h2 { font-family: var(--font-display); font-size: 1.6rem; margin-bottom: 10px; color: var(--green-dark); }
+.success-modal p { color: var(--text-secondary); margin-bottom: 28px; font-size: .92rem; }
+.btn-success {
+  background: var(--green-main); color: #fff;
+  border: none; cursor: pointer;
+  padding: 13px 30px;
+  border-radius: var(--radius-md);
+  font-size: .95rem; font-weight: 700;
+  transition: var(--transition);
+}
+.btn-success:hover { background: var(--green-dark); }
+
+/* ═══════════════════════════════════════
+   TOAST УВЕДОМЛЕНИЯ
+═══════════════════════════════════════ */
+.toast-wrap {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+  z-index: 400;
+  display: flex; flex-direction: column; gap: 8px;
+  align-items: center;
+  pointer-events: none;
+}
+.toast {
+  background: var(--green-dark);
+  color: #fff;
+  padding: 12px 20px;
+  border-radius: var(--radius-xl);
+  font-size: .88rem; font-weight: 500;
+  box-shadow: var(--shadow-lg);
+  white-space: nowrap;
+  animation: toastIn .3s ease, toastOut .3s ease 2.2s forwards;
+  display: flex; align-items: center; gap: 8px;
+}
+@keyframes toastIn { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+@keyframes toastOut { to { opacity:0; transform:translateY(8px); } }
+
+/* ═══════════════════════════════════════
+   FOOTER
+═══════════════════════════════════════ */
+.footer {
+  background: var(--green-dark);
+  color: rgba(255,255,255,.8);
+  margin-top: 80px;
+}
+.footer-inner {
+  max-width: 1340px; margin: 0 auto;
+  padding: 60px 24px 40px;
+  display: grid;
+  grid-template-columns: 1.4fr repeat(3, 1fr);
+  gap: 40px;
+}
+.footer-brand .logo { margin-bottom: 14px; }
+.footer-brand .logo-text { color: #fff; }
+.footer-brand p { font-size: .85rem; line-height: 1.7; color: rgba(255,255,255,.6); max-width: 240px; }
+.footer-col h4 {
+  font-size: .8rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 1px;
+  color: rgba(255,255,255,.5);
+  margin-bottom: 16px;
+}
+.footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.footer-col ul li a {
+  color: rgba(255,255,255,.75);
+  text-decoration: none;
+  font-size: .88rem;
+  transition: var(--transition);
+}
+.footer-col ul li a:hover { color: var(--green-light); }
+.footer-bottom {
+  border-top: 1px solid rgba(255,255,255,.1);
+  padding: 20px 24px;
+  max-width: 1340px; margin: 0 auto;
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 10px;
+}
+.footer-bottom p { font-size: .8rem; color: rgba(255,255,255,.4); }
+
+/* ═══════════════════════════════════════
+   АДАПТИВНОСТЬ
+═══════════════════════════════════════ */
+@media (max-width: 1024px) {
+  .shop-layout { grid-template-columns: 220px 1fr; }
+  .footer-inner { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 768px) {
+  .header-inner { flex-wrap: wrap; }
+  .search-wrap { order: 3; flex: 1 1 100%; max-width: 100%; }
+  
+  .hero-stats { gap: 20px; }
+  
+  .shop-layout {
+    grid-template-columns: 1fr;
+    padding: 20px 16px;
+  }
+  
+  .sidebar {
+    position: static;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .sidebar-title, .sidebar-divider, .sort-label { display: none; }
+  .sidebar .sort-select { display: block; }
+  .category-list {
+    flex-direction: row; flex-wrap: wrap;
+    gap: 6px;
+  }
+  .category-item { padding: 7px 12px; font-size: .82rem; }
+  .cat-count { display: none; }
+  
+  .cart-drawer, .fav-drawer { width: 100vw; }
+  
+  .footer-inner { grid-template-columns: 1fr; gap: 28px; }
+  .footer-brand p { max-width: 100%; }
+
+  .modal { padding: 28px 20px; }
+  .modal-actions { flex-direction: column; }
+}
+
+@media (max-width: 480px) {
+  .products-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .product-body { padding: 10px 12px; }
+  .product-name { font-size: .85rem; }
+  .product-price { font-size: .95rem; }
+  .btn-add { padding: 7px 10px; font-size: .75rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════
+     HEADER
+════════════════════════════ -->
+<header class="header">
+  <div class="header-inner">
+    <a href="#" class="logo">
+      <div class="logo-icon">🌿</div>
+      <span class="logo-text">Terra<span class="logo-dot">Sphere</span></span>
+    </a>
+
+    <div class="search-wrap">
+      <input type="text" class="search-input" id="searchInput" placeholder="Поиск эко-товаров...">
+      <span class="search-icon">🔍</span>
+    </div>
+
+    <div class="header-actions">
+      <button class="icon-btn" id="favBtn" title="Избранное" aria-label="Избранное">
+        ♡
+        <span class="badge hidden" id="favBadge">0</span>
+      </button>
+      <button class="icon-btn" id="cartBtn" title="Корзина" aria-label="Корзина">
+        🛒
+        <span class="badge hidden" id="cartBadge">0</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- ════════════════════════════
+     HERO BANNER
+════════════════════════════ -->
+<section class="hero" id="hero">
+  <div class="hero-decor hero-decor-1"></div>
+  <div class="hero-decor hero-decor-2"></div>
+  <div class="hero-decor hero-decor-3"></div>
+
+  <div class="hero-content">
+    <div class="hero-tag">🌱 Устойчивое потребление</div>
+    <h1>Маркетплейс<br>устойчивых товаров</h1>
+    <p>Экологичные продукты для дома, быта и здоровья. Каждая покупка — шаг к лучшему миру.</p>
+    <a href="#catalog" class="btn-hero">
+      🛍️ Перейти к покупкам
+    </a>
+
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <strong>1 200+</strong>
+        <span>Эко-товаров</span>
+      </div>
+      <div class="hero-stat">
+        <strong>98%</strong>
+        <span>Натуральный состав</span>
+      </div>
+      <div class="hero-stat">
+        <strong>CO₂</strong>
+        <span>Нейтральная доставка</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════
+     МАГАЗИН
+════════════════════════════ -->
+<main class="shop-layout" id="catalog">
+
+  <!-- САЙДБАР -->
+  <aside class="sidebar">
+    <p class="sidebar-title">Категории</p>
+    <ul class="category-list" id="categoryList">
+      <li class="category-item active" data-cat="all">
+        <span class="cat-icon">🌍</span> Все товары
+        <span class="cat-count" id="cnt-all">12</span>
+      </li>
+      <li class="category-item" data-cat="Дом">
+        <span class="cat-icon">🏠</span> Дом
+        <span class="cat-count" id="cnt-home">0</span>
+      </li>
+      <li class="category-item" data-cat="Личная гигиена">
+        <span class="cat-icon">🧴</span> Личная гигиена
+        <span class="cat-count" id="cnt-hygiene">0</span>
+      </li>
+      <li class="category-item" data-cat="Zero Waste">
+        <span class="cat-icon">♻️</span> Zero Waste
+        <span class="cat-count" id="cnt-zerowaste">0</span>
+      </li>
+      <li class="category-item" data-cat="Эко-еда">
+        <span class="cat-icon">🥗</span> Эко-еда
+        <span class="cat-count" id="cnt-food">0</span>
+      </li>
+      <li class="category-item" data-cat="Переработка">
+        <span class="cat-icon">🔄</span> Переработка
+        <span class="cat-count" id="cnt-recycle">0</span>
+      </li>
+    </ul>
+
+    <hr class="sidebar-divider">
+
+    <span class="sort-label">Сортировка</span>
+    <select class="sort-select" id="sortSelect">
+      <option value="default">По умолчанию</option>
+      <option value="price-asc">Цена: по возрастанию ↑</option>
+      <option value="price-desc">Цена: по убыванию ↓</option>
+      <option value="rating">По рейтингу ★</option>
+    </select>
+  </aside>
+
+  <!-- КАТАЛОГ -->
+  <div class="catalog-area">
+    <div class="catalog-header">
+      <div>
+        <h2 class="catalog-title">Каталог</h2>
+        <p class="catalog-count" id="catalogCount">Показано 12 товаров</p>
+      </div>
+    </div>
+    <div class="products-grid" id="productsGrid"></div>
+  </div>
+</main>
+
+<!-- ════════════════════════════
+     КОРЗИНА (DRAWER)
+════════════════════════════ -->
+<div class="cart-overlay" id="cartOverlay"></div>
+<aside class="cart-drawer" id="cartDrawer" aria-label="Корзина">
+  <div class="cart-head">
+    <h2>🛒 Корзина</h2>
+    <button class="cart-close" id="cartClose">✕</button>
+  </div>
+  <div class="cart-items" id="cartItems"></div>
+  <div class="cart-foot" id="cartFoot" style="display:none">
+    <div class="cart-summary">
+      <span>Товаров</span><span id="cartItemCount">0</span>
+    </div>
+    <div class="cart-summary">
+      <span>Доставка</span><span>Бесплатно 🌱</span>
+    </div>
+    <div class="cart-total">
+      <span>Итого</span><span id="cartTotal">0 ₽</span>
+    </div>
+    <button class="btn-checkout" id="checkoutBtn">Перейти к оформлению →</button>
+  </div>
+</aside>
+
+<!-- ════════════════════════════
+     ИЗБРАННОЕ (DRAWER)
+════════════════════════════ -->
+<div class="fav-overlay" id="favOverlay"></div>
+<aside class="fav-drawer" id="favDrawer" aria-label="Избранное">
+  <div class="fav-head">
+    <h2>♡ Избранное</h2>
+    <button class="cart-close" id="favClose">✕</button>
+  </div>
+  <div class="fav-items" id="favItems"></div>
+</aside>
+
+<!-- ════════════════════════════
+     МОДАЛЬНОЕ ОКНО ОФОРМЛЕНИЯ
+════════════════════════════ -->
+<div class="modal-overlay" id="checkoutModal">
+  <div class="modal" id="checkoutModalBox">
+    <div class="modal-head">
+      <div class="modal-icon">📦</div>
+      <h2>Оформление заказа</h2>
+      <p>Заполните данные для доставки</p>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="orderName">Ваше имя</label>
+      <input type="text" class="form-input" id="orderName" placeholder="Иван Иванов">
+    </div>
+    <div class="form-group">
+      <label class="form-label" for="orderPhone">Телефон</label>
+      <input type="tel" class="form-input" id="orderPhone" placeholder="+7 (___) ___-__-__">
+    </div>
+    <div class="form-group">
+      <label class="form-label" for="orderAddress">Адрес доставки</label>
+      <textarea class="form-textarea" id="orderAddress" placeholder="Город, улица, дом, квартира"></textarea>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn-confirm" id="confirmOrderBtn">Подтвердить заказ ✓</button>
+      <button class="btn-cancel" id="cancelOrderBtn">Отмена</button>
+    </div>
+  </div>
+</div>
+
+<!-- Модальное окно успеха -->
+<div class="modal-overlay" id="successModal">
+  <div class="modal success-modal">
+    <div class="success-icon">🎉</div>
+    <h2>Заказ оформлен!</h2>
+    <p>Спасибо за выбор экологичных товаров. Мы свяжемся с вами в ближайшее время для подтверждения заказа.</p>
+    <button class="btn-success" id="successCloseBtn">Продолжить покупки</button>
+  </div>
+</div>
+
+<!-- ════════════════════════════
+     TOAST
+════════════════════════════ -->
+<div class="toast-wrap" id="toastWrap"></div>
+
+<!-- ════════════════════════════
+     FOOTER
+════════════════════════════ -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="logo" style="margin-bottom:14px">
+        <div class="logo-icon">🌿</div>
+        <span class="logo-text" style="color:#fff">Terra<span class="logo-dot">Sphere</span></span>
+      </div>
+      <p>Маркетплейс устойчивых товаров для осознанного потребления. Каждый товар проходит экологическую проверку.</p>
+    </div>
+    <div class="footer-col">
+      <h4>О проекте</h4>
+      <ul>
+        <li><a href="#">Наша миссия</a></li>
+        <li><a href="#">Экологический стандарт</a></li>
+        <li><a href="#">Поставщики</a></li>
+        <li><a href="#">Партнёрство</a></li>
+        <li><a href="#">Блог</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Контакты</h4>
+      <ul>
+        <li><a href="mailto:hello@terrasphere.ru">hello@terrasphere.ru</a></li>
+        <li><a href="#">+7 (800) 555-35-35</a></li>
+        <li><a href="#">Telegram</a></li>
+        <li><a href="#">ВКонтакте</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Правовое</h4>
+      <ul>
+        <li><a href="#">Политика конфиденциальности</a></li>
+        <li><a href="#">Пользовательское соглашение</a></li>
+        <li><a href="#">Условия доставки</a></li>
+        <li><a href="#">Возврат товара</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2025 TerraSphere. Все права защищены.</p>
+    <p>🌱 Углеродно-нейтральная компания</p>
+  </div>
+</footer>
+
+<!-- ════════════════════════════
+     JAVASCRIPT
+════════════════════════════ -->
+<script>
+// ════════════════════════════
+// ДАННЫЕ ТОВАРОВ
+// ════════════════════════════
+const PRODUCTS = [
+  { id:1,  name:'Бамбуковая зубная щётка',    cat:'Личная гигиена', price:290,  rating:4.8, emoji:'🪥',  badge:'Хит',    desc:'Натуральный бамбук, мягкая щетина' },
+  { id:2,  name:'Мыло ручной работы «Лаванда»',cat:'Личная гигиена',price:380,  rating:4.6, emoji:'🫧',  badge:null,     desc:'100% натуральные масла' },
+  { id:3,  name:'Шампунь-бар без сульфатов',   cat:'Личная гигиена', price:490,  rating:4.7, emoji:'🧴',  badge:'Новинка', desc:'Заменяет 3 флакона' },
+  { id:4,  name:'Многоразовый пакет для овощей',cat:'Zero Waste',    price:250,  rating:4.5, emoji:'🛍️', badge:null,     desc:'Сетка из органического хлопка' },
+  { id:5,  name:'Набор пчелиных оберток',       cat:'Zero Waste',    price:590,  rating:4.9, emoji:'🍯',  badge:'Хит',    desc:'Замена пищевой плёнки' },
+  { id:6,  name:'Компостер для кухни',          cat:'Переработка',   price:1890, rating:4.4, emoji:'🪣',  badge:null,     desc:'5 литров, с угольным фильтром' },
+  { id:7,  name:'Органические орехи микс',      cat:'Эко-еда',       price:620,  rating:4.8, emoji:'🥜',  badge:'Эко',    desc:'500г, сертифицированный продукт' },
+  { id:8,  name:'Биоразлагаемые пакеты',        cat:'Переработка',   price:320,  rating:4.3, emoji:'♻️', badge:null,     desc:'50 штук, 100% биоразложение' },
+  { id:9,  name:'Деревянная расчёска',          cat:'Личная гигиена', price:450,  rating:4.6, emoji:'🪮',  badge:null,     desc:'Бук, антистатическое покрытие' },
+  { id:10, name:'Свечи из соевого воска',       cat:'Дом',           price:760,  rating:4.7, emoji:'🕯️', badge:'Новинка', desc:'С эфирными маслами, 40 ч горения' },
+  { id:11, name:'Хлопковые салфетки (10 шт.)',  cat:'Дом',           price:390,  rating:4.5, emoji:'🧻',  badge:null,     desc:'Замена бумажных полотенец' },
+  { id:12, name:'Гречневая крупа органик',      cat:'Эко-еда',       price:280,  rating:4.6, emoji:'🌾',  badge:'Эко',    desc:'1кг, с фермы без пестицидов' },
+  { id:13, name:'Бамбуковые зубочистки',        cat:'Zero Waste',    price:190,  rating:4.2, emoji:'🪵',  badge:null,     desc:'200 шт., биоразлагаемые' },
+  { id:14, name:'Эко-стиральный порошок',       cat:'Дом',           price:540,  rating:4.4, emoji:'🫧',  badge:null,     desc:'1кг, безопасно для водоёмов' },
+  { id:15, name:'Смузи-пакеты замороженные',    cat:'Эко-еда',       price:450,  rating:4.7, emoji:'🥤',  badge:'Хит',    desc:'5 порций, ягоды и зелень' },
+  { id:16, name:'Контейнер для компоста',       cat:'Переработка',   price:890,  rating:4.5, emoji:'🗑️', badge:null,     desc:'Нержавеющая сталь, 3 л' },
+];
+
+// ════════════════════════════
+// СОСТОЯНИЕ ПРИЛОЖЕНИЯ
+// ════════════════════════════
+let cart = JSON.parse(localStorage.getItem('ts_cart') || '[]');
+let fav  = JSON.parse(localStorage.getItem('ts_fav')  || '[]');
+let currentCat  = 'all';
+let currentSort = 'default';
+let searchQuery = '';
+
+// ════════════════════════════
+// УТИЛИТЫ
+// ════════════════════════════
+const $ = id => document.getElementById(id);
+const save = () => {
+  localStorage.setItem('ts_cart', JSON.stringify(cart));
+  localStorage.setItem('ts_fav',  JSON.stringify(fav));
+};
+
+// Рендер звёзд
+function renderStars(r) {
+  const full = Math.floor(r);
+  const half = r % 1 >= 0.5 ? 1 : 0;
+  const empty = 5 - full - half;
+  return '★'.repeat(full) + (half ? '½' : '') + '☆'.repeat(empty);
+}
+
+// Toast
+function toast(msg, icon = '✅') {
+  const t = document.createElement('div');
+  t.className = 'toast';
+  t.innerHTML = `<span>${icon}</span><span>${msg}</span>`;
+  $('toastWrap').appendChild(t);
+  setTimeout(() => t.remove(), 2600);
+}
+
+// ════════════════════════════
+// КАТАЛОГ — РЕНДЕР
+// ════════════════════════════
+function getFiltered() {
+  let items = [...PRODUCTS];
+  if (currentCat !== 'all') items = items.filter(p => p.cat === currentCat);
+  if (searchQuery) {
+    const q = searchQuery.toLowerCase();
+    items = items.filter(p => p.name.toLowerCase().includes(q) || p.cat.toLowerCase().includes(q));
+  }
+  if (currentSort === 'price-asc')  items.sort((a,b) => a.price - b.price);
+  if (currentSort === 'price-desc') items.sort((a,b) => b.price - a.price);
+  if (currentSort === 'rating')     items.sort((a,b) => b.rating - a.rating);
+  return items;
+}
+
+function renderCatalog() {
+  const items = getFiltered();
+  const grid = $('productsGrid');
+  $('catalogCount').textContent = `Показано ${items.length} товаров`;
+
+  // Обновить счётчики категорий
+  const cats = { all: PRODUCTS.length };
+  PRODUCTS.forEach(p => { cats[p.cat] = (cats[p.cat] || 0) + 1; });
+  const map = {
+    'all': 'cnt-all', 'Дом': 'cnt-home',
+    'Личная гигиена': 'cnt-hygiene', 'Zero Waste': 'cnt-zerowaste',
+    'Эко-еда': 'cnt-food', 'Переработка': 'cnt-recycle'
+  };
+  Object.entries(map).forEach(([k, id]) => {
+    const el = $(id); if (el) el.textContent = cats[k] || 0;
+  });
+
+  if (!items.length) {
+    grid.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon">🔍</div>
+        <h3>Товары не найдены</h3>
+        <p>Попробуйте изменить фильтры или поисковый запрос</p>
+      </div>`;
+    return;
+  }
+
+  grid.innerHTML = items.map(p => {
+    const inCart = cart.some(c => c.id === p.id);
+    const inFav  = fav.includes(p.id);
+    return `
+    <div class="product-card" data-id="${p.id}">
+      <div class="product-image-wrap">
+        <div class="product-img">${p.emoji}</div>
+        ${p.badge ? `<span class="product-badge">${p.badge}</span>` : ''}
+        <button class="product-fav ${inFav ? 'active' : ''}" data-id="${p.id}" title="В избранное">
+          ${inFav ? '♥' : '♡'}
+        </button>
+      </div>
+      <div class="product-body">
+        <div class="product-cat">${p.cat}</div>
+        <div class="product-name">${p.name}</div>
+        <div class="product-rating">
+          <span class="stars">${renderStars(p.rating)}</span>
+          <span class="rating-val">${p.rating}</span>
+        </div>
+        <div class="product-footer">
+          <div class="product-price">${p.price} ₽</div>
+          <button class="btn-add ${inCart ? 'added' : ''}" data-id="${p.id}">
+            ${inCart ? '✓ В корзине' : '+ В корзину'}
+          </button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+
+  // События карточек
+  grid.querySelectorAll('.btn-add').forEach(btn => {
+    btn.addEventListener('click', () => toggleCart(+btn.dataset.id));
+  });
+  grid.querySelectorAll('.product-fav').forEach(btn => {
+    btn.addEventListener('click', () => toggleFav(+btn.dataset.id));
+  });
+}
+
+// ════════════════════════════
+// КОРЗИНА
+// ════════════════════════════
+function toggleCart(id) {
+  const exists = cart.findIndex(c => c.id === id);
+  const prod = PRODUCTS.find(p => p.id === id);
+  if (exists >= 0) {
+    cart.splice(exists, 1);
+    toast(`«${prod.name}» удалён из корзины`, '🗑️');
+  } else {
+    cart.push({ id, qty: 1 });
+    toast(`«${prod.name}» добавлен в корзину`, '🛒');
+  }
+  save(); renderCatalog(); renderCart(); updateBadges();
+}
+
+function changeQty(id, delta) {
+  const item = cart.find(c => c.id === id);
+  if (!item) return;
+  item.qty += delta;
+  if (item.qty < 1) {
+    cart = cart.filter(c => c.id !== id);
+    toast('Товар удалён из корзины', '🗑️');
+  }
+  save(); renderCatalog(); renderCart(); updateBadges();
+}
+
+function removeFromCart(id) {
+  cart = cart.filter(c => c.id !== id);
+  save(); renderCatalog(); renderCart(); updateBadges();
+  toast('Товар удалён', '🗑️');
+}
+
+function renderCart() {
+  const container = $('cartItems');
+  const foot = $('cartFoot');
+
+  if (!cart.length) {
+    container.innerHTML = `
+      <div class="cart-empty">
+        <div class="ce-icon">🛒</div>
+        <p>Ваша корзина пуста.<br>Добавьте что-нибудь из каталога!</p>
+      </div>`;
+    foot.style.display = 'none';
+    return;
+  }
+
+  foot.style.display = 'block';
+  let total = 0; let count = 0;
+
+  container.innerHTML = cart.map(c => {
+    const p = PRODUCTS.find(x => x.id === c.id);
+    if (!p) return '';
+    total += p.price * c.qty;
+    count += c.qty;
+    return `
+    <div class="cart-item">
+      <div class="cart-item-img">${p.emoji}</div>
+      <div class="cart-item-info">
+        <div class="cart-item-name">${p.name}</div>
+        <div class="cart-item-price">${p.price} ₽ × ${c.qty} = ${p.price * c.qty} ₽</div>
+      </div>
+      <div class="cart-qty">
+        <button class="qty-btn" data-id="${p.id}" data-delta="-1">−</button>
+        <span class="qty-val">${c.qty}</span>
+        <button class="qty-btn" data-id="${p.id}" data-delta="1">+</button>
+      </div>
+      <button class="cart-item-del" data-id="${p.id}" title="Удалить">🗑</button>
+    </div>`;
+  }).join('');
+
+  $('cartTotal').textContent = total.toLocaleString('ru') + ' ₽';
+  $('cartItemCount').textContent = count;
+
+  container.querySelectorAll('.qty-btn').forEach(btn => {
+    btn.addEventListener('click', () => changeQty(+btn.dataset.id, +btn.dataset.delta));
+  });
+  container.querySelectorAll('.cart-item-del').forEach(btn => {
+    btn.addEventListener('click', () => removeFromCart(+btn.dataset.id));
+  });
+}
+
+// ════════════════════════════
+// ИЗБРАННОЕ
+// ════════════════════════════
+function toggleFav(id) {
+  const idx = fav.indexOf(id);
+  const prod = PRODUCTS.find(p => p.id === id);
+  if (idx >= 0) {
+    fav.splice(idx, 1);
+    toast(`«${prod.name}» удалён из избранного`, '💔');
+  } else {
+    fav.push(id);
+    toast(`«${prod.name}» в избранном!`, '♥');
+  }
+  save(); renderCatalog(); renderFav(); updateBadges();
+}
+
+function renderFav() {
+  const container = $('favItems');
+  if (!fav.length) {
+    container.innerHTML = `
+      <div class="cart-empty">
+        <div class="ce-icon">♡</div>
+        <p>В избранном пусто.<br>Добавьте понравившиеся товары!</p>
+      </div>`;
+    return;
+  }
+  container.innerHTML = fav.map(id => {
+    const p = PRODUCTS.find(x => x.id === id);
+    if (!p) return '';
+    return `
+    <div class="fav-item">
+      <div class="fav-item-img">${p.emoji}</div>
+      <div class="fav-item-info">
+        <div class="fav-item-name">${p.name}</div>
+        <div class="fav-item-price">${p.price} ₽ · ${p.cat}</div>
+      </div>
+      <button class="fav-item-add" data-id="${p.id}">В корзину</button>
+      <button class="fav-item-del" data-id="${p.id}" title="Удалить">✕</button>
+    </div>`;
+  }).join('');
+
+  container.querySelectorAll('.fav-item-add').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = +btn.dataset.id;
+      if (!cart.some(c => c.id === id)) {
+        cart.push({ id, qty: 1 });
+        save(); renderCatalog(); renderCart(); updateBadges();
+        const p = PRODUCTS.find(x => x.id === id);
+        toast(`«${p.name}» добавлен в корзину`, '🛒');
+      }
+    });
+  });
+  container.querySelectorAll('.fav-item-del').forEach(btn => {
+    btn.addEventListener('click', () => toggleFav(+btn.dataset.id));
+  });
+}
+
+// ════════════════════════════
+// БЕЙДЖИ
+// ════════════════════════════
+function updateBadges() {
+  const cartCount = cart.reduce((s, c) => s + c.qty, 0);
+  const favCount  = fav.length;
+
+  const cb = $('cartBadge'); const fb = $('favBadge');
+  cb.textContent = cartCount; cb.classList.toggle('hidden', !cartCount);
+  fb.textContent = favCount;  fb.classList.toggle('hidden', !favCount);
+}
+
+// ════════════════════════════
+// DRAWER ОТКРЫТИЕ/ЗАКРЫТИЕ
+// ════════════════════════════
+function openCart() {
+  renderCart();
+  $('cartDrawer').classList.add('open');
+  $('cartOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeCart() {
+  $('cartDrawer').classList.remove('open');
+  $('cartOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function openFav() {
+  renderFav();
+  $('favDrawer').classList.add('open');
+  $('favOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeFav() {
+  $('favDrawer').classList.remove('open');
+  $('favOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// ════════════════════════════
+// ОФОРМЛЕНИЕ ЗАКАЗА
+// ════════════════════════════
+function openCheckout() {
+  closeCart();
+  $('checkoutModal').classList.add('open');
+}
+function closeCheckout() {
+  $('checkoutModal').classList.remove('open');
+}
+function confirmOrder() {
+  const name    = $('orderName').value.trim();
+  const phone   = $('orderPhone').value.trim();
+  const address = $('orderAddress').value.trim();
+  let valid = true;
+
+  [$('orderName'), $('orderPhone'), $('orderAddress')].forEach(el => el.classList.remove('error'));
+
+  if (!name)    { $('orderName').classList.add('error');    valid = false; }
+  if (!phone)   { $('orderPhone').classList.add('error');   valid = false; }
+  if (!address) { $('orderAddress').classList.add('error'); valid = false; }
+
+  if (!valid) { toast('Пожалуйста, заполните все поля', '⚠️'); return; }
+
+  // Очистить форму и корзину
+  $('orderName').value = $('orderPhone').value = $('orderAddress').value = '';
+  cart = []; save(); renderCatalog(); renderCart(); updateBadges();
+  closeCheckout();
+  $('successModal').classList.add('open');
+}
+
+// ════════════════════════════
+// ФИЛЬТРЫ И ПОИСК
+// ════════════════════════════
+$('categoryList').addEventListener('click', e => {
+  const item = e.target.closest('.category-item');
+  if (!item) return;
+  document.querySelectorAll('.category-item').forEach(i => i.classList.remove('active'));
+  item.classList.add('active');
+  currentCat = item.dataset.cat;
+  renderCatalog();
+});
+
+$('sortSelect').addEventListener('change', e => {
+  currentSort = e.target.value;
+  renderCatalog();
+});
+
+$('searchInput').addEventListener('input', e => {
+  searchQuery = e.target.value;
+  renderCatalog();
+});
+
+// ════════════════════════════
+// СОБЫТИЯ КНОПОК
+// ════════════════════════════
+$('cartBtn').addEventListener('click', openCart);
+$('cartClose').addEventListener('click', closeCart);
+$('cartOverlay').addEventListener('click', closeCart);
+
+$('favBtn').addEventListener('click', openFav);
+$('favClose').addEventListener('click', closeFav);
+$('favOverlay').addEventListener('click', closeFav);
+
+$('checkoutBtn').addEventListener('click', openCheckout);
+$('cancelOrderBtn').addEventListener('click', closeCheckout);
+$('confirmOrderBtn').addEventListener('click', confirmOrder);
+
+$('successCloseBtn').addEventListener('click', () => {
+  $('successModal').classList.remove('open');
+});
+
+// Закрытие модала по клику вне
+$('checkoutModal').addEventListener('click', e => {
+  if (e.target === $('checkoutModal')) closeCheckout();
+});
+$('successModal').addEventListener('click', e => {
+  if (e.target === $('successModal')) $('successModal').classList.remove('open');
+});
+
+// Escape — закрыть все
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    closeCart(); closeFav(); closeCheckout();
+    $('successModal').classList.remove('open');
+  }
+});
+
+// ════════════════════════════
+// ИНИЦИАЛИЗАЦИЯ
+// ════════════════════════════
+renderCatalog();
+updateBadges();
+</script>
+</body>
+</html>
